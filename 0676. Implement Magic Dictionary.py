@@ -1,8 +1,6 @@
 class Node:
     def __init__(self, val=None):
-        self.val = val
-        self.children = [None]*26
-        self.hasEnd = False
+        self.val, self.children, self.hasEnd = val, [None]*26, False
 
 class MagicDictionary:
     def __init__(self):
@@ -10,26 +8,20 @@ class MagicDictionary:
 
     def buildDict(self, dictionary: List[str]) -> None:
         for word in dictionary:
-            self.insertToTrie(self.root, list(word)[::-1])
-        
-    def insertToTrie(self, node, word):
-        if not word: 
+            node = self.root
+            for c, idx in ((word[i], ord(word[i])%26) for i in range(len(word))):
+                node.children[idx] = node.children[idx] or Node(c)
+                node = node.children[idx]
+            
             node.hasEnd = True
-            return
-        letter = word.pop()
-        idx = ord(letter)%26
-        if not node.children[idx]:
-            node.children[idx] = Node(letter)
         
-        self.insertToTrie(node.children[idx], word)
-        
-
     def search(self, searchWord: str) -> bool:
-        return any(self.searchHelper(child, searchWord, 0, 1) for child in self.root.children if child)
+        return self.searchHelper(self.root, searchWord, -1, 1)
     
     def searchHelper(self, node, word, i, wrongCount):
-        if word[i] != node.val: wrongCount -= 1
-        if wrongCount < 0: return False
-        if i == len(word)-1: return wrongCount == 0 and node.hasEnd
+        if i > -1:
+            if word[i] != node.val: wrongCount -= 1
+            if wrongCount < 0: return False
+            if i == len(word)-1: return not wrongCount and node.hasEnd
 
         return any(self.searchHelper(child, word, i+1, wrongCount) for child in node.children if child)
