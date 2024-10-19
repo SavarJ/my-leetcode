@@ -1,26 +1,48 @@
 class MedianFinder:
     def __init__(self):
-        self.left = [] #maxheap
-        self.right = [] #minheap
+        self.heaps = [], [] # left-half is maxheap, right-half is minheap
 
     def addNum(self, num: int) -> None:
-        # always add to the left first
-        heappush(self.left, -num)
+        left, right = self.heaps
 
-        # if left side is bigger than right side
-        if self.left and self.right and -self.left[0] > self.right[0]:
-            heappush(self.right, -heappop(self.left))
+        # exchange with right to find the correct, new "lesser" value and push to leftheap
+        heappush(left, -heappushpop(right, num))
 
         # balance the heaps and ensure len(left) >= len(right)
-        if len(self.left) - len(self.right) > 1:
-            heappush(self.right, -heappop(self.left))
+        if len(left) - len(right) > 1:
+            heappush(right, -heappop(left))
         
-        if len(self.right) - len(self.left) > 0:
-            heappush(self.left, -heappop(self.right))
-
     def findMedian(self) -> float:
         # left heap length should always be equal or greater than right
-        if len(self.left) > len(self.right):
-            return -self.left[0]
-        else: 
-            return (-self.left[0]+self.right[0])/2
+        left, right = self.heaps
+        return -left[0] if len(left) > len(right) else (-left[0]+right[0])/2
+
+# class MedianFinder:
+#     def __init__(self):
+#         self.heaps = [], [] # left-half is maxheap, right-half is minheap
+
+#     def addNum(self, num: int) -> None:
+#         left, right = self.heaps
+
+#         # always add to the left first
+#         heappush(left, -num)
+
+#         # if left side is bigger than right side
+#         if left and right and -left[0] > right[0]:
+#             heappush(right, -heappop(left))
+
+#         # balance the heaps and ensure len(left) >= len(right)
+#         if len(left) - len(right) > 1:
+#             heappush(right, -heappop(left))
+        
+#         if len(right) - len(left) > 0:
+#             heappush(left, -heappop(right))
+
+#     def findMedian(self) -> float:
+#         left, right = self.heaps
+
+#         # left heap length should always be equal or greater than right
+#         if len(left) > len(right):
+#             return -left[0]
+#         else: 
+#             return (-left[0]+right[0])/2
