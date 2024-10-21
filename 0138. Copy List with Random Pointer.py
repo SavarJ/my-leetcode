@@ -1,18 +1,43 @@
 class Solution:
     def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
-        if not head: return
+        class Solution:
+    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
         curr = head
         while curr:
-            copy = Node(curr.val, curr.next)
-            curr.next, curr = copy, curr.next
+            node = Node(curr.val, curr.next)
+            curr.next = node
+            curr = curr.next.next
+        
+        dummy = dummy2 = Node(-1)
+        curr = head
+        while curr:
+            dummy.next = curr.next
+            node = dummy.next
+            nxt = node.next
 
-        curr = head
-        while curr:
-            curr.next.random, curr = curr.random.next if curr.random else None, curr.next.next
+            node.random = None if not curr.random else curr.random.next
+            node.next = None if not nxt else nxt.next
+
+            curr = nxt
+            dummy = dummy.next
         
-        new, front, old = head, head.next, head.next
-        while new:
-            newnext, oldnext = new.next.next, old.next.next if old.next else None
-            new.next, old.next, new, old = newnext, oldnext, newnext, oldnext
+        return dummy2.next
         
-        return front
+        # m = {None: None}
+        # curr = head
+        # while curr:
+        #     m[curr] = Node(curr.val)
+        #     curr = curr.next
+        
+        # curr = head
+        # dummy = Node(-1)
+        # while curr:
+        #     dummy.next = m[curr]
+        #     copy = dummy.next
+        #     copy.next = m[curr.next]
+        #     copy.random = m[curr.random]
+
+        #     dummy = dummy.next
+        #     curr = curr.next
+        
+        # return m[head]
