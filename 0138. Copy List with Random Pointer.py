@@ -1,7 +1,5 @@
 class Solution:
     def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
-        class Solution:
-    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
         curr = head
         while curr:
             node = Node(curr.val, curr.next)
